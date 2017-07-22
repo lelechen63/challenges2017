@@ -71,7 +71,7 @@ def get_xy(
         label_names,
         batch_centers,
         size,
-        fc_shape,
+        # fc_shape,
         nlabels,
         preload,
         split,
@@ -97,7 +97,7 @@ def get_xy(
             )
             y_cat = [keras.utils.to_categorical(y_cat, num_classes=labels)]
             if experimental == 3:
-                y_fc = [np.asarray(get_patches(l, lc, fc_shape, preload))
+                y_fc = [np.asarray(get_patches(l, lc, size, preload))
                         for l, lc in izip(labels_generator(label_names), centers)]
                 y_fc = np.concatenate(y_fc)
                 y_fc[idx] = y_fc
@@ -135,7 +135,7 @@ def load_patch_batch_train(
         centers,
         batch_size,
         size,
-        fc_shape,
+        # fc_shape,
         nlabels,
         dfactor=10,
         datatype=np.float32,
@@ -172,8 +172,8 @@ def load_patch_batch_train(
             label_names,
             batch_centers,
             size,
-            (),
-            fc_shape,
+            # (),
+            # fc_shape,
             nlabels,
             preload,
             split,
@@ -189,7 +189,7 @@ def load_patches_train(
         label_names,
         centers,
         size,
-        fc_shape,
+        # fc_shape,
         nlabels,
         dfactor=10,
         datatype=np.float32,
@@ -205,7 +205,7 @@ def load_patches_train(
         label_names,
         batch_centers,
         size,
-        fc_shape,
+        # fc_shape,
         nlabels,
         preload,
         split,
@@ -245,6 +245,7 @@ def load_patch_batch_generator_train(
             label_names,
             batch_centers[i:i + batch_size],
             size,
+            # fc_shape,
             nlabels,
             preload,
             split,

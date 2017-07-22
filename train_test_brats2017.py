@@ -1,4 +1,4 @@
-from __future__ import print_function
+# from __future__ import print_function
 import argparse
 import os
 from time import strftime
@@ -257,6 +257,7 @@ def main():
                   c['g'] + 'Training the model with a generator for ' +
                   c['b'] + '(%d parameters)' % net.count_params() + c['nc'])
             print(net.summary())
+       
             net.fit_generator(
                 generator=load_patch_batch_train(
                     image_names=train_data,
@@ -264,6 +265,7 @@ def main():
                     centers=train_centers,
                     batch_size=batch_size,
                     size=patch_size,
+                    # fc_shape = patch_size,
                     nlabels=num_classes,
                     dfactor=dfactor,
                     preload=preload,
@@ -276,6 +278,7 @@ def main():
                     centers=val_centers,
                     batch_size=batch_size,
                     size=patch_size,
+                    # fc_shape = patch_size,
                     nlabels=num_classes,
                     dfactor=dfactor,
                     preload=preload,

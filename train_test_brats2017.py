@@ -130,6 +130,7 @@ def main():
 
         # First we check that we did not train for that patient, in order to save time
         try:
+            print net_name
             net = keras.models.load_model(net_name)
 
             print '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'

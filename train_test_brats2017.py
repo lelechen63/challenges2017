@@ -257,46 +257,46 @@ def main():
 
                 net = Model(inputs=merged_inputs, outputs=[tumor, core, enhancing])
 
-            net.compile(optimizer='adadelta', loss='categorical_crossentropy', metrics=['accuracy'])
+        net.compile(optimizer='adadelta', loss='categorical_crossentropy', metrics=['accuracy'])
 
-            print(c['c'] + '[' + strftime("%H:%M:%S") + ']    ' +
-                  c['g'] + 'Training the model with a generator for ' +
-                  c['b'] + '(%d parameters)' % net.count_params() + c['nc'])
-            print(net.summary())
-       
-            net.fit_generator(
-                generator=load_patch_batch_train(
-                    image_names=train_data,
-                    label_names=train_labels,
-                    centers=train_centers,
-                    batch_size=batch_size,
-                    size=patch_size,
-                    # fc_shape = patch_size,
-                    nlabels=num_classes,
-                    dfactor=dfactor,
-                    preload=preload,
-                    split=not sequential,
-                    datatype=np.float32
-                ),
-                validation_data=load_patch_batch_train(
-                    image_names=val_data,
-                    label_names=val_labels,
-                    centers=val_centers,
-                    batch_size=batch_size,
-                    size=patch_size,
-                    # fc_shape = patch_size,
-                    nlabels=num_classes,
-                    dfactor=dfactor,
-                    preload=preload,
-                    split=not sequential,
-                    datatype=np.float32
-                ),
-                steps_per_epoch=train_steps_per_epoch,
-                validation_steps=val_steps_per_epoch,
-                max_q_size=queue,
-                epochs=epochs
-            )
-            net.save(net_name)
+        print(c['c'] + '[' + strftime("%H:%M:%S") + ']    ' +
+              c['g'] + 'Training the model with a generator for ' +
+              c['b'] + '(%d parameters)' % net.count_params() + c['nc'])
+        print(net.summary())
+   
+        net.fit_generator(
+            generator=load_patch_batch_train(
+                image_names=train_data,
+                label_names=train_labels,
+                centers=train_centers,
+                batch_size=batch_size,
+                size=patch_size,
+                # fc_shape = patch_size,
+                nlabels=num_classes,
+                dfactor=dfactor,
+                preload=preload,
+                split=not sequential,
+                datatype=np.float32
+            ),
+            validation_data=load_patch_batch_train(
+                image_names=val_data,
+                label_names=val_labels,
+                centers=val_centers,
+                batch_size=batch_size,
+                size=patch_size,
+                # fc_shape = patch_size,
+                nlabels=num_classes,
+                dfactor=dfactor,
+                preload=preload,
+                split=not sequential,
+                datatype=np.float32
+            ),
+            steps_per_epoch=train_steps_per_epoch,
+            validation_steps=val_steps_per_epoch,
+            max_q_size=queue,
+            epochs=epochs
+        )
+        net.save(net_name)
 
         # Then we test the net.
         for p, gt_name in zip(test_data, test_labels):

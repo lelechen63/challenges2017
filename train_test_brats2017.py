@@ -14,7 +14,7 @@ from data_creation import load_patch_batch_train, get_cnn_centers
 from data_creation import load_patch_batch_generator_test
 from data_manipulation.generate_features import get_mask_voxels
 from data_manipulation.metrics import dsc_seg
-# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def parse_inputs():
@@ -131,7 +131,11 @@ def main():
         # First we check that we did not train for that patient, in order to save time
         try:
             net = keras.models.load_model(net_name)
+
+            print '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+            print 'load net successfully'
         except IOError:
+            print '==============================================================='
             # NET definition using Keras
             train_centers = get_cnn_centers(train_data[:, 0], train_labels, balanced=balanced)
             val_centers = get_cnn_centers(val_data[:, 0], val_labels, balanced=balanced)

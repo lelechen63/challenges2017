@@ -14,6 +14,7 @@ from data_creation import load_patch_batch_train, get_cnn_centers
 from data_creation import load_patch_batch_generator_test
 from data_manipulation.generate_features import get_mask_voxels
 from data_manipulation.metrics import dsc_seg
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def parse_inputs():
@@ -28,12 +29,12 @@ def parse_inputs():
     parser.add_argument('-d', '--dense-size', dest='dense_size', type=int, default=256)
     parser.add_argument('-D', '--down-factor', dest='dfactor', type=int, default=500)
     parser.add_argument('-n', '--num-filters', action='store', dest='n_filters', nargs='+', type=int, default=[32])
-    parser.add_argument('-e', '--epochs', action='store', dest='epochs', type=int, default=1)
+    parser.add_argument('-e', '--epochs', action='store', dest='epochs', type=int, default=4n)
     parser.add_argument('-q', '--queue', action='store', dest='queue', type=int, default=10)
     parser.add_argument('-u', '--unbalanced', action='store_false', dest='balanced', default=True)
     parser.add_argument('-s', '--sequential', action='store_true', dest='sequential', default=False)
     parser.add_argument('-r', '--recurrent', action='store_true', dest='recurrent', default=False)
-    parser.add_argument('--preload', action='store_true', dest='preload', default=False)
+    parser.add_argument('--preload', action='store_true', dest='preload', default=True)
     parser.add_argument('--padding', action='store', dest='padding', default='valid')
     parser.add_argument('--no-flair', action='store_false', dest='use_flair', default=True)
     parser.add_argument('--no-t1', action='store_false', dest='use_t1', default=True)

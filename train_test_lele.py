@@ -14,7 +14,7 @@ from data_creation import load_patch_batch_train, get_cnn_centers
 from data_creation import load_patch_batch_generator_test
 from data_manipulation.generate_features import get_mask_voxels
 from data_manipulation.metrics import dsc_seg
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def parse_inputs():
@@ -33,7 +33,6 @@ def parse_inputs():
     parser.add_argument('-q', '--queue', action='store', dest='queue', type=int, default=10)
     parser.add_argument('-u', '--unbalanced', action='store_false', dest='balanced', default=True)
     parser.add_argument('-s', '--sequential', action='store_true', dest='sequential', default=False)
-    
     parser.add_argument('--preload', action='store_true', dest='preload', default=False)
     parser.add_argument('--padding', action='store', dest='padding', default='valid')
     parser.add_argument('--no-flair', action='store_false', dest='use_flair', default=True)
@@ -78,11 +77,10 @@ def main():
     c = color_codes()
 
     # Prepare the net architecture parameters
-    dfactor = options['dfactor']
-    
     sequential = options['sequential']
+    dfactor = options['dfactor']
     # Prepare the net hyperparameters
-    num_classes = 4
+    num_classes = 5
     epochs = options['epochs']
     padding = options['padding']
     patch_width = options['patch_width']
@@ -95,6 +93,7 @@ def main():
     conv_width = options['conv_width']
     kernel_size_list = conv_width if isinstance(conv_width, list) else [conv_width]*conv_blocks
     balanced = options['balanced']
+    recurrent = options['recurrent']
     # Data loading parameters
     preload = options['preload']
     queue = options['queue']
@@ -103,7 +102,7 @@ def main():
     path = options['dir_name']
     filters_s = 'n'.join(['%d' % nf for nf in filters_list])
     conv_s = 'c'.join(['%d' % cs for cs in kernel_size_list])
-    s_s =  '.f'
+    s_s = '.s' if sequential else '.f'
     ub_s = '.ub' if not balanced else ''
     params_s = (ub_s, dfactor, s_s, patch_width, conv_s, filters_s, dense_size, epochs, padding)
     sufix = '%s.D%d%s.p%d.c%s.n%s.d%d.e%d.pad_%s.' % params_s
@@ -119,13 +118,8 @@ def main():
     data_names, label_names = get_names_from_path(options)
     folds = options['folds']
     fold_generator = izip(nfold_cross_validation(data_names, label_names, n=folds, val_data=0.25), xrange(folds))
-    print 'ggggggggggggggggggggggggggggggggggggggggggggggggggggggg'
-    print fold_generator
     dsc_results = list()
     for (train_data, train_labels, val_data, val_labels, test_data, test_labels), i in fold_generator:
-        print 'train data: ', train_data
-        print 'train labels', train_labels
-        
         print(c['c'] + '[' + strftime("%H:%M:%S") + ']  ' + c['nc'] + 'Fold %d/%d: ' % (i+1, folds) + c['g'] +
               'Number of training/validation/testing images (%d=%d/%d=%d/%d)'
               % (len(train_data), len(train_labels), len(val_data), len(val_labels), len(test_data)) + c['nc'])
@@ -137,9 +131,6 @@ def main():
         try:
             # net_name_before =  os.path.join(path,'baseline-brats2017.fold0.D500.f.p13.c3c3c3c3c3.n32n32n32n32n32.d256.e1.pad_valid.mdl')
             net = keras.models.load_model(net_name)
-
-            print '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-            print 'load net successfully'
         except IOError:
             print '==============================================================='
             # NET definition using Keras
@@ -159,69 +150,67 @@ def main():
             # - Whole segmentation (tumor, core and enhancing parts)
             # The idea is to let the network work on the three parts to improve the multiclass segmentation.
             merged_inputs = Input(shape=(4,) + patch_size, name='merged_inputs')
-            print merged_inputs.shape
-            print '+++++++'
             flair = Reshape((1,) + patch_size)(
-                Lambda(
-                    lambda l: l[:, 0, :, :, :],
-                    output_shape=(1,) + patch_size)(merged_inputs),
+              Lambda(
+                  lambda l: l[:, 0, :, :, :],
+                  output_shape=(1,) + patch_size)(merged_inputs),
             )
             t2 = Reshape((1,) + patch_size)(
-                Lambda(lambda l: l[:, 1, :, :, :], output_shape=(1,) + patch_size)(merged_inputs)
+              Lambda(lambda l: l[:, 1, :, :, :], output_shape=(1,) + patch_size)(merged_inputs)
             )
             t1 = Lambda(lambda l: l[:, 2:, :, :, :], output_shape=(2,) + patch_size)(merged_inputs)
-
+            
             flair = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
 
+            flair = Dropout(0.5)(flair)
             flair = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
-            
+            flair = Dropout(0.5)(flair)
             flair = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
-            
+            flair = Dropout(0.5)(flair)
             flair = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
-
+            flair = Dropout(0.5)(flair)
             flair = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
-
+            flair = Dropout(0.5)(flair)
             t2 = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
-
+            t2 = Dropout(0.5)(t2)
             t2 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
-            
+            t2 = Dropout(0.5)(t2)
             t2 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
-            
+            t2 = Dropout(0.5)(t2)
             t2 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
-
+            t2 = Dropout(0.5)(t2)
             t2 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
-
+            t2 = Dropout(0.5)(t2)
             t1 = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
-
+            t1 = Dropout(0.5)(t1)
             t1 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
-            
+            t1 = Dropout(0.5)(t1)
             t1 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
-            
+            t1 = Dropout(0.5)(t1)
+            t1 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1) 
+            t1 = Dropout(0.5)(t1)
             t1 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
-
-            t1 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
-
+            t1 = Dropout(0.5)(t1)
             # for filters, kernel_size in zip(filters_list, kernel_size_list):
-            #     flair = Conv3D(filters,
-            #                    kernel_size=kernel_size,
-            #                    activation='relu',
-            #                    data_format='channels_first'
-            #                    )(flair)
-            #     t2 = Conv3D(filters,
-            #                 kernel_size=kernel_size,
-            #                 activation='relu',
-            #                 data_format='channels_first'
-            #                 )(t2)
-            #     t1 = Conv3D(filters,
-            #                 kernel_size=kernel_size,
-            #                 activation='relu',
-            #                 data_format='channels_first'
-            #                 )(t1)
-            #     flair = Dropout(0.5)(flair)
-            #     t2 = Dropout(0.5)(t2)
-            #     t1 = Dropout(0.5)(t1)
+            #   flair = Conv3D(filters,
+            #                  kernel_size=kernel_size,
+            #                  activation='relu',
+            #                  data_format='channels_first'
+            #                  )(flair)
+            #   t2 = Conv3D(filters,
+            #               kernel_size=kernel_size,
+            #               activation='relu',
+            #               data_format='channels_first'
+            #               )(t2)
+            #   t1 = Conv3D(filters,
+            #               kernel_size=kernel_size,
+            #               activation='relu',
+            #               data_format='channels_first'
+            #               )(t1)
+            #   flair = Dropout(0.5)(flair)
+            #   t2 = Dropout(0.5)(t2)
+            #   t1 = Dropout(0.5)(t1)
 
-                
             flair = Flatten()(flair)
             t2 = Flatten()(t2)
             t1 = Flatten()(t1)
@@ -243,12 +232,12 @@ def main():
 
             # net_name_before =  os.path.join(path,'baseline-brats2017.fold0.D500.f.p13.c3c3c3c3c3.n32n32n32n32n32.d256.e1.pad_valid.mdl')
             # net = keras.models.load_model(net_name_before)
-            print net.summary()
             net.compile(optimizer='adadelta', loss='categorical_crossentropy', metrics=['accuracy'])
 
             print(c['c'] + '[' + strftime("%H:%M:%S") + ']    ' +
                   c['g'] + 'Training the model with a generator for ' +
                   c['b'] + '(%d parameters)' % net.count_params() + c['nc'])
+            print(net.summary())
        
             net.fit_generator(
                 generator=load_patch_batch_train(
@@ -316,13 +305,14 @@ def main():
                 )
                 [x, y, z] = np.stack(centers, axis=1)
 
-                tumor = np.argmax(y_pr_pred[0], axis=1)
-                y_pr_pred = y_pr_pred[-1]
-                roi = np.zeros_like(roi).astype(dtype=np.uint8)
-                roi[x, y, z] = tumor
-                roi_nii.get_data()[:] = roi
-                roiname = os.path.join(patient_path, 'deep-brats17' + sufix + 'test.roi.nii.gz')
-                roi_nii.to_filename(roiname)
+                if not sequential:
+                    tumor = np.argmax(y_pr_pred[0], axis=1)
+                    y_pr_pred = y_pr_pred[-1]
+                    roi = np.zeros_like(roi).astype(dtype=np.uint8)
+                    roi[x, y, z] = tumor
+                    roi_nii.get_data()[:] = roi
+                    roiname = os.path.join(patient_path, 'deep-brats17' + sufix + 'test.roi.nii.gz')
+                    roi_nii.to_filename(roiname)
 
                 y_pred = np.argmax(y_pr_pred, axis=1)
 
@@ -330,7 +320,6 @@ def main():
                 # Post-processing (Basically keep the biggest connected region)
                 image = get_biggest_region(image)
                 labels = np.unique(gt.flatten())
-                print labels
                 results = (p_name,) + tuple([dsc_seg(gt == l, image == l) for l in labels[1:]])
                 text = 'Subject %s DSC: ' + '/'.join(['%f' for _ in labels[1:]])
                 print(text % results)
@@ -343,3 +332,11 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
+
+
+

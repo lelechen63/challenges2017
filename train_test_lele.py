@@ -21,7 +21,7 @@ def parse_inputs():
     # I decided to separate this function, for easier acces to the command line parameters
     parser = argparse.ArgumentParser(description='Test different nets with 3D data.')
     parser.add_argument('-f', '--folder', dest='dir_name', default='/home/mariano/DATA/Brats17CBICA/')
-    parser.add_argument('-F', '--n-fold', dest='folds', type=int, default=5)
+    parser.add_argument('-F', '--n-fold', dest='folds', type=int, default=1)
     parser.add_argument('-i', '--patch-width', dest='patch_width', type=int, default=13)
     parser.add_argument('-k', '--kernel-size', dest='conv_width', nargs='+', type=int, default=3)
     parser.add_argument('-c', '--conv-blocks', dest='conv_blocks', type=int, default=5)
@@ -154,7 +154,8 @@ def main():
             # - Whole segmentation (tumor, core and enhancing parts)
             # The idea is to let the network work on the three parts to improve the multiclass segmentation.
             merged_inputs = Input(shape=(4,) + patch_size, name='merged_inputs')
-
+            print merged_inputs.shape
+            print '+++++++'
             flair = Reshape((1,) + patch_size)(
                 Lambda(
                     lambda l: l[:, 0, :, :, :],
@@ -164,10 +165,6 @@ def main():
                 Lambda(lambda l: l[:, 1, :, :, :], output_shape=(1,) + patch_size)(merged_inputs)
             )
             t1 = Lambda(lambda l: l[:, 2:, :, :, :], output_shape=(2,) + patch_size)(merged_inputs)
-
-            print flair.shape
-            print t1.shape
-            print t2.shape
 
             flair = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
 

@@ -32,6 +32,8 @@ def parse_inputs():
     parser.add_argument('-e', '--epochs', action='store', dest='epochs', type=int, default=3)
     parser.add_argument('-q', '--queue', action='store', dest='queue', type=int, default=10)
     parser.add_argument('-u', '--unbalanced', action='store_false', dest='balanced', default=True)
+    parser.add_argument('-s', '--sequential', action='store_true', dest='sequential', default=False)
+    
     parser.add_argument('--preload', action='store_true', dest='preload', default=False)
     parser.add_argument('--padding', action='store', dest='padding', default='valid')
     parser.add_argument('--no-flair', action='store_false', dest='use_flair', default=True)
@@ -77,6 +79,8 @@ def main():
 
     # Prepare the net architecture parameters
     dfactor = options['dfactor']
+    
+    sequential = options['sequential']
     # Prepare the net hyperparameters
     num_classes = 5
     epochs = options['epochs']

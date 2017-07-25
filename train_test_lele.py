@@ -93,7 +93,6 @@ def main():
     conv_width = options['conv_width']
     kernel_size_list = conv_width if isinstance(conv_width, list) else [conv_width]*conv_blocks
     balanced = options['balanced']
-    recurrent = options['recurrent']
     # Data loading parameters
     preload = options['preload']
     queue = options['queue']

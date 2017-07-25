@@ -123,6 +123,9 @@ def main():
     print fold_generator
     dsc_results = list()
     for (train_data, train_labels, val_data, val_labels, test_data, test_labels), i in fold_generator:
+        print 'train data: ', train_data
+        print 'train labels', train_labels
+        
         print(c['c'] + '[' + strftime("%H:%M:%S") + ']  ' + c['nc'] + 'Fold %d/%d: ' % (i+1, folds) + c['g'] +
               'Number of training/validation/testing images (%d=%d/%d=%d/%d)'
               % (len(train_data), len(train_labels), len(val_data), len(val_labels), len(test_data)) + c['nc'])

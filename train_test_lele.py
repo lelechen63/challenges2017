@@ -21,7 +21,7 @@ def parse_inputs():
     # I decided to separate this function, for easier acces to the command line parameters
     parser = argparse.ArgumentParser(description='Test different nets with 3D data.')
     parser.add_argument('-f', '--folder', dest='dir_name', default='/home/mariano/DATA/Brats17CBICA/')
-    parser.add_argument('-F', '--n-fold', dest='folds', type=int, default=5)
+    parser.add_argument('-F', '--n-fold', dest='folds', type=int, default=3)
     parser.add_argument('-i', '--patch-width', dest='patch_width', type=int, default=13)
     parser.add_argument('-k', '--kernel-size', dest='conv_width', nargs='+', type=int, default=3)
     parser.add_argument('-c', '--conv-blocks', dest='conv_blocks', type=int, default=5)
@@ -29,7 +29,7 @@ def parse_inputs():
     parser.add_argument('-d', '--dense-size', dest='dense_size', type=int, default=256)
     parser.add_argument('-D', '--down-factor', dest='dfactor', type=int, default=500)
     parser.add_argument('-n', '--num-filters', action='store', dest='n_filters', nargs='+', type=int, default=[32])
-    parser.add_argument('-e', '--epochs', action='store', dest='epochs', type=int, default=1)
+    parser.add_argument('-e', '--epochs', action='store', dest='epochs', type=int, default=4)
     parser.add_argument('-q', '--queue', action='store', dest='queue', type=int, default=10)
     parser.add_argument('-u', '--unbalanced', action='store_false', dest='balanced', default=True)
     parser.add_argument('-s', '--sequential', action='store_true', dest='sequential', default=False)

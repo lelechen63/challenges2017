@@ -185,23 +185,23 @@ def main():
                 t1 = Dropout(0.5)(t1)
 
                 
-                flair = Flatten()(flair)
-                t2 = Flatten()(t2)
-                t1 = Flatten()(t1)
-                flair = Dense(dense_size, activation='relu')(flair)
-                flair = Dropout(0.5)(flair)
-                t2 = concatenate([flair, t2])
-                t2 = Dense(dense_size, activation='relu')(t2)
-                t2 = Dropout(0.5)(t2)
-                t1 = concatenate([t2, t1])
-                t1 = Dense(dense_size, activation='relu')(t1)
-                t1 = Dropout(0.5)(t1)
+            flair = Flatten()(flair)
+            t2 = Flatten()(t2)
+            t1 = Flatten()(t1)
+            flair = Dense(dense_size, activation='relu')(flair)
+            flair = Dropout(0.5)(flair)
+            t2 = concatenate([flair, t2])
+            t2 = Dense(dense_size, activation='relu')(t2)
+            t2 = Dropout(0.5)(t2)
+            t1 = concatenate([t2, t1])
+            t1 = Dense(dense_size, activation='relu')(t1)
+            t1 = Dropout(0.5)(t1)
 
-                tumor = Dense(2, activation='softmax', name='tumor')(flair)
-                core = Dense(3, activation='softmax', name='core')(t2)
-                enhancing = Dense(num_classes, activation='softmax', name='enhancing')(t1)
+            tumor = Dense(2, activation='softmax', name='tumor')(flair)
+            core = Dense(3, activation='softmax', name='core')(t2)
+            enhancing = Dense(num_classes, activation='softmax', name='enhancing')(t1)
 
-                net = Model(inputs=merged_inputs, outputs=[tumor, core, enhancing])
+            net = Model(inputs=merged_inputs, outputs=[tumor, core, enhancing])
 
 
             # net_name_before =  os.path.join(path,'baseline-brats2017.fold0.D500.f.p13.c3c3c3c3c3.n32n32n32n32n32.d256.e1.pad_valid.mdl')

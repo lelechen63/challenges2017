@@ -82,7 +82,7 @@ def main():
     
     sequential = options['sequential']
     # Prepare the net hyperparameters
-    num_classes = 5
+    num_classes = 4
     epochs = options['epochs']
     padding = options['padding']
     patch_width = options['patch_width']
@@ -119,6 +119,8 @@ def main():
     data_names, label_names = get_names_from_path(options)
     folds = options['folds']
     fold_generator = izip(nfold_cross_validation(data_names, label_names, n=folds, val_data=0.25), xrange(folds))
+    print 'ggggggggggggggggggggggggggggggggggggggggggggggggggggggg'
+    print fold_generator
     dsc_results = list()
     for (train_data, train_labels, val_data, val_labels, test_data, test_labels), i in fold_generator:
         print(c['c'] + '[' + strftime("%H:%M:%S") + ']  ' + c['nc'] + 'Fold %d/%d: ' % (i+1, folds) + c['g'] +
@@ -244,7 +246,6 @@ def main():
             print(c['c'] + '[' + strftime("%H:%M:%S") + ']    ' +
                   c['g'] + 'Training the model with a generator for ' +
                   c['b'] + '(%d parameters)' % net.count_params() + c['nc'])
-            print(net.summary())
        
             net.fit_generator(
                 generator=load_patch_batch_train(

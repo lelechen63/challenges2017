@@ -29,7 +29,7 @@ def parse_inputs():
     parser.add_argument('-d', '--dense-size', dest='dense_size', type=int, default=256)
     parser.add_argument('-D', '--down-factor', dest='dfactor', type=int, default=500)
     parser.add_argument('-n', '--num-filters', action='store', dest='n_filters', nargs='+', type=int, default=[32])
-    parser.add_argument('-e', '--epochs', action='store', dest='epochs', type=int, default=3)
+    parser.add_argument('-e', '--epochs', action='store', dest='epochs', type=int, default=0)
     parser.add_argument('-q', '--queue', action='store', dest='queue', type=int, default=10)
     parser.add_argument('-u', '--unbalanced', action='store_false', dest='balanced', default=True)
     parser.add_argument('-s', '--sequential', action='store_true', dest='sequential', default=False)
@@ -329,6 +329,7 @@ def main():
                 # Post-processing (Basically keep the biggest connected region)
                 image = get_biggest_region(image)
                 labels = np.unique(gt.flatten())
+                print labels
                 results = (p_name,) + tuple([dsc_seg(gt == l, image == l) for l in labels[1:]])
                 text = 'Subject %s DSC: ' + '/'.join(['%f' for _ in labels[1:]])
                 print(text % results)

@@ -168,25 +168,56 @@ def main():
             print flair.shape
             print t1.shape
             print t2.shape
-            for filters, kernel_size in zip(filters_list, kernel_size_list):
-                flair = Conv3D(filters,
-                               kernel_size=kernel_size,
-                               activation='relu',
-                               data_format='channels_first'
-                               )(flair)
-                t2 = Conv3D(filters,
-                            kernel_size=kernel_size,
-                            activation='relu',
-                            data_format='channels_first'
-                            )(t2)
-                t1 = Conv3D(filters,
-                            kernel_size=kernel_size,
-                            activation='relu',
-                            data_format='channels_first'
-                            )(t1)
-                flair = Dropout(0.5)(flair)
-                t2 = Dropout(0.5)(t2)
-                t1 = Dropout(0.5)(t1)
+
+            flair = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
+
+            flair = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
+            
+            flair = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
+            
+            flair = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
+
+            flair = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
+
+            t2 = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
+
+            t2 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
+            
+            t2 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
+            
+            t2 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
+
+            t2 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
+
+            t1 = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
+
+            t1 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
+            
+            t1 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
+            
+            t1 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
+
+            t1 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
+
+            # for filters, kernel_size in zip(filters_list, kernel_size_list):
+            #     flair = Conv3D(filters,
+            #                    kernel_size=kernel_size,
+            #                    activation='relu',
+            #                    data_format='channels_first'
+            #                    )(flair)
+            #     t2 = Conv3D(filters,
+            #                 kernel_size=kernel_size,
+            #                 activation='relu',
+            #                 data_format='channels_first'
+            #                 )(t2)
+            #     t1 = Conv3D(filters,
+            #                 kernel_size=kernel_size,
+            #                 activation='relu',
+            #                 data_format='channels_first'
+            #                 )(t1)
+            #     flair = Dropout(0.5)(flair)
+            #     t2 = Dropout(0.5)(t2)
+            #     t1 = Dropout(0.5)(t1)
 
                 
             flair = Flatten()(flair)

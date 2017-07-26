@@ -80,7 +80,7 @@ def main():
     sequential = options['sequential']
     dfactor = options['dfactor']
     # Prepare the net hyperparameters
-    num_classes = 4
+    num_classes = 5
     epochs = options['epochs']
     padding = options['padding']
     patch_width = options['patch_width']
@@ -149,6 +149,9 @@ def main():
             # - Whole segmentation (tumor, core and enhancing parts)
             # The idea is to let the network work on the three parts to improve the multiclass segmentation.
             merged_inputs = Input(shape=(4,) + patch_size, name='merged_inputs')
+            print '+++++++++++++++++++++'
+            print merged_inputs.shape
+
             flair = Reshape((1,) + patch_size)(
               Lambda(
                   lambda l: l[:, 0, :, :, :],
@@ -180,6 +183,7 @@ def main():
             t2 = Dropout(0.5)(t2)
             t2 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
             t2 = Dropout(0.5)(t2)
+            
             t1 = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
             t1 = Dropout(0.5)(t1)
             t1 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)

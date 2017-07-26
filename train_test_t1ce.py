@@ -14,14 +14,14 @@ from data_creation import load_patch_batch_train, get_cnn_centers
 from data_creation import load_patch_batch_generator_test
 from data_manipulation.generate_features import get_mask_voxels
 from data_manipulation.metrics import dsc_seg
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 
 def parse_inputs():
     # I decided to separate this function, for easier acces to the command line parameters
     parser = argparse.ArgumentParser(description='Test different nets with 3D data.')
     parser.add_argument('-f', '--folder', dest='dir_name', default='/home/mariano/DATA/Brats17CBICA/')
-    parser.add_argument('-F', '--n-fold', dest='folds', type=int, default=3)
+    parser.add_argument('-F', '--n-fold', dest='folds', type=int, default=2)
     parser.add_argument('-i', '--patch-width', dest='patch_width', type=int, default=13)
     parser.add_argument('-k', '--kernel-size', dest='conv_width', nargs='+', type=int, default=3)
     parser.add_argument('-c', '--conv-blocks', dest='conv_blocks', type=int, default=5)
@@ -183,7 +183,7 @@ def main():
             t2 = Dropout(0.5)(t2)
             t2 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
             t2 = Dropout(0.5)(t2)
-            
+
             t1 = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
             t1 = Dropout(0.5)(t1)
             t1 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)

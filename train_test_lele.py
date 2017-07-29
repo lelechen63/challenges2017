@@ -210,6 +210,10 @@ def main():
             flair = Flatten()(flair)
             t2 = Flatten()(t2)
             t1 = Flatten()(t1)
+            print '=-================================='
+            print flair.shape
+            print t2.shape
+            print t1.shape
             flair = Dense(dense_size*4, activation='relu')(flair)
             flair = Dropout(0.8)(flair)
             flair = Dense(dense_size, activation='relu')(flair)

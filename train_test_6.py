@@ -212,12 +212,19 @@ def main():
             flair = Flatten()(flair)
             t2 = Flatten()(t2)
             t1 = Flatten()(t1)
+
+            flair = concatenate([flair, t2])
             flair = Dense(dense_size, activation='relu')(flair)
             flair = Dropout(0.5)(flair)
-            t2 = concatenate([flair, t2])
+
+
+            #flair_vector = np.copy(flair,True)
+            t2 = concatenate([flair, t2, t1])
             t2 = Dense(dense_size, activation='relu')(t2)
             t2 = Dropout(0.5)(t2)
-            t1 = concatenate([t2, t1])
+
+
+            t1 = concatenate([flair,t2, t1])
             t1 = Dense(dense_size, activation='relu')(t1)
             t1 = Dropout(0.5)(t1)
 
@@ -321,7 +328,11 @@ def main():
                 results = (p_name,) + tuple([dsc_seg(gt == l, image == l) for l in labels[1:]])
                 text = 'Subject %s DSC: ' + '/'.join(['%f' for _ in labels[1:]])
                 print(text % results)
+                print '----------------------'
+                print labels
+                print '------------------------'
                 dsc_results.append(results)
+
 
                 print(c['g'] + '                   -- Saving image ' + c['b'] + outputname + c['nc'])
                 roi_nii.get_data()[:] = image

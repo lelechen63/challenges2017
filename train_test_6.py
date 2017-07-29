@@ -1,5 +1,4 @@
 # from __future__ import print_function
-from keras import backend as K
 import argparse
 import os
 from time import strftime
@@ -15,10 +14,8 @@ from data_creation import load_patch_batch_train, get_cnn_centers
 from data_creation import load_patch_batch_generator_test
 from data_manipulation.generate_features import get_mask_voxels
 from data_manipulation.metrics import dsc_seg
-from tensorflow.python.client import device_lib
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-#os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-import tensorflow as tf
 
 def parse_inputs():
     # I decided to separate this function, for easier acces to the command line parameters
@@ -76,8 +73,6 @@ def get_names_from_path(options):
 
 
 def main():
-    print '+++++++'
-    print(device_lib.list_local_devices())
     options = parse_inputs()
     c = color_codes()
 
@@ -224,7 +219,7 @@ def main():
 
 
             #flair_vector = np.copy(flair,True)
-            t2 = concatenate([flair, t2])
+            t2 = concatenate([flair, t2, t1])
             t2 = Dense(dense_size, activation='relu')(t2)
             t2 = Dropout(0.5)(t2)
 
@@ -333,11 +328,10 @@ def main():
                 results = (p_name,) + tuple([dsc_seg(gt == l, image == l) for l in labels[1:]])
                 text = 'Subject %s DSC: ' + '/'.join(['%f' for _ in labels[1:]])
                 print(text % results)
-                print '----------------------'
+                print '--------------------'
                 print labels
-                print '------------------------'
+                print '---------------------'
                 dsc_results.append(results)
-
 
                 print(c['g'] + '                   -- Saving image ' + c['b'] + outputname + c['nc'])
                 roi_nii.get_data()[:] = image
@@ -345,8 +339,6 @@ def main():
 
 
 if __name__ == '__main__':
-    # with K.tf.device('/gpu:1'):
-    #     K._set_session(K.tf.Session(config=K.tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)))
     main()
 
 

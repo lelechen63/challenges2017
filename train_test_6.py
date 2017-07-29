@@ -14,8 +14,8 @@ from data_creation import load_patch_batch_train, get_cnn_centers
 from data_creation import load_patch_batch_generator_test
 from data_manipulation.generate_features import get_mask_voxels
 from data_manipulation.metrics import dsc_seg
-#os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+import tensorflow as tf
 
 def parse_inputs():
     # I decided to separate this function, for easier acces to the command line parameters
@@ -340,7 +340,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    with tf.device(/gpu:1):
+        main()
 
 
 

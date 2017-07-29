@@ -219,7 +219,7 @@ def main():
 
 
             #flair_vector = np.copy(flair,True)
-            t2 = concatenate([flair, t2, t1])
+            t2 = concatenate([flair, t2])
             t2 = Dense(dense_size, activation='relu')(t2)
             t2 = Dropout(0.5)(t2)
 

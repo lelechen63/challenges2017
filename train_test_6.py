@@ -341,9 +341,9 @@ def main():
 
 
 if __name__ == '__main__':
-    with K.tf.device('/gpu:1'):
-        K._set_session(K.tf.Session(config=K.tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)))
-        main()
+    # with K.tf.device('/gpu:1'):
+    #     K._set_session(K.tf.Session(config=K.tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)))
+    main()
 
 
 

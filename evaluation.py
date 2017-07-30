@@ -213,6 +213,7 @@ def pixel_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
         seg_path = patient
         for f in fs:
             if f[-10:-7] == 'est' and '.e4.' in f:
+                print f
                 seg_path = patient + f
 
             elif f[-10:-7] =='seg':

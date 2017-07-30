@@ -308,8 +308,8 @@ def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
         results = (p_name,) + tuple([dsc_seg(gt_3d == l, seg_3d == l) for l in labels])
         text = 'Subject %s DSC: ' + '/'.join(['%f' for _ in labels[1:]])
         # print(text % results)
-        if results[4]+ results[2] + results[3]  > 0.1:
-            dsc.append(results[1:])
+        # if results[4]+ results[2] + results[3]  > 0.1:
+        dsc.append(results[1:])
     for i in range(len(dsc)):
         label0 += dsc[i][0]
         label1 += dsc[i][1]

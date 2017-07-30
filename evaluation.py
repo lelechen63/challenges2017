@@ -296,12 +296,18 @@ def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
             continue
         gt_path = patient 
         seg_path = patient
+        no_file =  1
         for f in fs:
+            if f[-10:-7] =='seg':
+                gt_path = gt_path + f
             if f[-10:-7] == 'est' and '.e3.' in f:
                 seg_path = seg_path + f
+            else:
+                no_file = 0
+        if no_file == 0:
+            continue
 
-            elif f[-10:-7] =='seg':
-                gt_path = gt_path + f
+            
         seg_3d = nii2np(seg_path)
         gt_3d = nii2np(gt_path)
         labels = np.unique(gt_3d.flatten())

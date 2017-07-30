@@ -300,7 +300,7 @@ def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
         for f in fs:
             if f[-10:-7] =='seg':
                 gt_path = gt_path + f
-            if f[-10:-7] == 'est' and '.e3.' in f:
+            if f[-10:-7] == 'est' and '.e4.' in f:
                 seg_path = seg_path + f
             else:
                 no_file = 0

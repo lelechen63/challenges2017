@@ -297,7 +297,7 @@ def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
         gt_path = patient 
         seg_path = patient
         for f in fs:
-            if f[-10:-7] == 'est':
+            if f[-10:-7] == 'est' and '.e4.' in f:
                 seg_path = seg_path + f
 
             elif f[-10:-7] =='seg':

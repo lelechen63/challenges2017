@@ -209,14 +209,15 @@ def pixel_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
         fs = os.listdir(patient)
         if len(fs) == 5:
             continue
-        gt_path = patient 
+        gt_path = patient
         seg_path = patient
         for f in fs:
-            if f[-10:-7] == 'est':
-                seg_path = seg_path + f
+            if f[-10:-7] == 'est' and 'e4' in f:
+                seg_path = (patient + f)
 
             elif f[-10:-7] =='seg':
                 gt_path = gt_path + f
+
         seg_3d = nii2np(seg_path)
         gt_3d = nii2np(gt_path)
         pas = 0

@@ -157,8 +157,10 @@ def main():
             # t2 = Reshape((1,) + patch_size)(
             #   Lambda(lambda l: l[:, 1, :, :, :], output_shape=(1,) + patch_size)(merged_inputs)
             # )
-            flair =  Lambda(lambda l: l[:, :, :, :, :], output_shape=(4,) + patch_size)(merged_inputs)
-            
+            flair =  Lambda(lambda l: l[:, :, :, :, :], output_shape=(2,) + patch_size)(merged_inputs)
+            print type(flair)
+            print flair.shape
+
             flair = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
             flair = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
             # flair = Dropout(0.5)(flair)

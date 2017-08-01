@@ -14,7 +14,7 @@ from data_creation import load_patch_batch_train, get_cnn_centers
 from data_creation import load_patch_batch_generator_test
 from data_manipulation.generate_features import get_mask_voxels
 from data_manipulation.metrics import dsc_seg
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def parse_inputs():
@@ -242,7 +242,7 @@ def main():
             t2 = lstm_instance(Permute((2, 1))(Reshape((dense_size, -1))(t2)))
             t1 = lstm_instance(Permute((2, 1))(Reshape((dense_size, -1))(t1)))
 
-            
+
             # flair = Flatten()(flair)
             # t2 = Flatten()(t2)
             # t1 = Flatten()(t1)

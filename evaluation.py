@@ -11,7 +11,7 @@ def parse_arguments():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
         )
     parser.add_argument('--path', '-p',
-        default="/media/lele/DATA/brain/Brats17TrainingData/HGG5/",
+        default="/media/lele/DATA/brain/Brats17TrainingData/HGG7/",
         help = 'path to the data'
         )
    
@@ -195,7 +195,7 @@ class EvalSegErr(Exception):
 def nii2np(path):
     result = load_nii(path).get_data()
     return result
-def pixel_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HGG5/'):
+def pixel_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HGG7/'):
     patients = os.listdir(path)
     print len(patients)
     pixel_accuracy_instance = []
@@ -212,7 +212,7 @@ def pixel_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
         gt_path = patient
         seg_path = patient
         for f in fs:
-            if f[-10:-7] == 'est' and '.e4.' in f:
+            if f[-10:-7] == 'est' and '.e6.' in f:
                 print f
                 seg_path = patient + f
 
@@ -294,7 +294,7 @@ def dice_coef_np(y_true, y_pred, num_classes):
     intersection = np.sum(y_true * y_pred, axis=0)
     return (2. * intersection) / (np.sum(y_true, axis=0) + np.sum(y_pred, axis=0))
 
-def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HGG5/'):
+def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HGG7/'):
     patients = os.listdir(path)
     print len(patients)
     pixel_accuracy_instance = []
@@ -320,7 +320,7 @@ def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
         for f in fs:
             if f[-10:-7] =='seg':
                 gt_path = gt_path + f
-            if f[-10:-7] == 'est' and '.e4.' in f:
+            if f[-10:-7] == 'est' and '.e6.' in f:
                 seg_path = seg_path + f
                 no_file = 1
         if no_file == 0:

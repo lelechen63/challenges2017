@@ -152,7 +152,7 @@ def main():
             flair = Reshape((1,) + patch_size)(
               Lambda(
                   lambda l: l[:,  :, :, :],
-                  output_shape=(1,) + patch_size)(merged_inputs),
+                  output_shape=(4,) + patch_size)(merged_inputs),
             )
             # t2 = Reshape((1,) + patch_size)(
             #   Lambda(lambda l: l[:, 1, :, :, :], output_shape=(1,) + patch_size)(merged_inputs)

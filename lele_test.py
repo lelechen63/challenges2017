@@ -25,17 +25,21 @@ def test():
 
 #test()
 def test_net():
-	path = '/media/lele/DATA/brain/Brats17TrainingData/HGG5/Brats17_TCIA_335_1/deep-brats17.D500.f.p13.c3c3c3c3c3.n32n32n32n32n32.d256.e4.pad_valid.test.nii.gz'
-	gt = '/media/lele/DATA/brain/Brats17TrainingData/HGG5/Brats17_TCIA_335_1/Brats17_TCIA_335_1_seg.nii.gz'
+
+	path='/media/lele/DATA/brain/Brats17TrainingData/HGG5/Brats17_TCIA_469_1/Brats17_TCIA_469_1_seg.nii.gz'
+	gt = '/media/lele/DATA/brain/Brats17TrainingData/HGG5/Brats17_TCIA_469_1/deep-brats17.D500.f.p13.c3c3c3c3c3.n32n32n32n32n32.d256.e4.pad_valid.test.nii.gz'
+# brats_ni1 = os.path.join(data_path2, 'Brats17_2013_24_1_flair.nii.gz')
+	# path = '/media/lele/DATA/brain/Brats17TrainingData/HGG5/Brats17_TCIA_335_1/deep-brats17.D500.f.p13.c3c3c3c3c3.n32n32n32n32n32.d256.e4.pad_valid.test.nii.gz'
+	# gt = '/media/lele/DATA/brain/Brats17TrainingData/HGG5/Brats17_TCIA_335_1/Brats17_TCIA_335_1_seg.nii.gz'
 	output = load_nii(path).get_data()
 	gt = load_nii(gt).get_data()
-	print output.shape
-	print np.count_nonzero(gt  == 1)
-	print np.count_nonzero(output == 1)
-	print np.count_nonzero(gt  == 2)
-	print np.count_nonzero(output == 2)
-	print np.count_nonzero(gt  == 4)
-	print np.count_nonzero(output == 4)
+	# print output.shape
+	# print np.count_nonzero(gt  == 1)
+	# print np.count_nonzero(output == 1)
+	# print np.count_nonzero(gt  == 2)
+	# print np.count_nonzero(output == 2)
+	# print np.count_nonzero(gt  == 4)
+	# print np.count_nonzero(output == 4)
 
 
 	gt1 = gt[:,:,90]

@@ -273,6 +273,26 @@ def pixel_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
     print ave_miu
     print ave_fwiu
 # pixel_level_evaluation()
+def one_hot(y, num_classees):
+    y_ = np.zeros([len(y), num_classees])
+    y_[np.arange(len(y)), y] = 1
+    return y_
+
+
+def dice_coef_np(y_true, y_pred, num_classes):
+    """
+
+    :param y_true: sparse labels
+    :param y_pred: sparse labels
+    :param num_classes: number of classes
+    :return:
+    """
+    y_true = y_true.flatten()
+    y_true = one_hot(y_true, num_classes)
+    y_pred = y_pred.flatten()
+    y_pred = one_hot(y_pred, num_classes)
+    intersection = np.sum(y_true * y_pred, axis=0)
+    return (2. * intersection) / (np.sum(y_true, axis=0) + np.sum(y_pred, axis=0))
 
 def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HGG5/'):
     patients = os.listdir(path)
@@ -296,14 +316,13 @@ def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
             continue
         gt_path = patient 
         seg_path = patient
-        no_file =  1
+        no_file =  0
         for f in fs:
             if f[-10:-7] =='seg':
                 gt_path = gt_path + f
             if f[-10:-7] == 'est' and '.e4.' in f:
                 seg_path = seg_path + f
-            else:
-                no_file = 0
+                no_file = 1
         if no_file == 0:
             continue
 
@@ -330,3 +349,4 @@ def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
     print label2
     print label4
 label_level_evaluation(args.path)
+

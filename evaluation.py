@@ -336,6 +336,7 @@ def label_level_evaluation(path = '/media/lele/DATA/brain/Brats17TrainingData/HG
         # if results[4]+ results[2] + results[3]  > 0.1:
         dsc.append(results[1:])
     for i in range(len(dsc)):
+        print dsc[i]
         label0 += dsc[i][0]
         label1 += dsc[i][1]
         label2 += dsc[i][2]

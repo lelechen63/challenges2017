@@ -234,9 +234,9 @@ def main():
                 name='fcn_t1'
             )(t1)
             t1 = Dropout(0.5)(t1)
-            flair = Dropout(0.5)(flair)
-            t2 = Dropout(0.5)(t2)
-            t1 = Dropout(0.5)(t1)
+            # flair = Dropout(0.5)(flair)
+            # t2 = Dropout(0.5)(t2)
+            # t1 = Dropout(0.5)(t1)
             lstm_instance = LSTM(dense_size, implementation=1, name='rf_layer')
             flair = lstm_instance(Permute((2, 1))(Reshape((dense_size, -1))(flair)))
             t2 = lstm_instance(Permute((2, 1))(Reshape((dense_size, -1))(t2)))

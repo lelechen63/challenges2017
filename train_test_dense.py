@@ -242,7 +242,7 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
     compression = 1.0 - reduction
 
     # Initial convolution
-    x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same',data_format='channels_first' name='initial_conv3D',
+    x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same',data_format='channels_first', name='initial_conv3D',
                use_bias=False, kernel_regularizer=l2(weight_decay))(img_input)
     print x.shape
     for block_idx in range(nb_dense_block - 1):

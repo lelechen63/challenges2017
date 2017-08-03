@@ -5,11 +5,11 @@ from keras.engine import Layer
 from keras.utils.generic_utils import get_custom_objects
 from keras.utils.conv_utils import normalize_data_format
 
-if K.backend() == 'theano':
-    import theano_backend as K_BACKEND
-else:
-    import tensorflow_backend as K_BACKEND
-
+# if K.backend() == 'theano':
+#     import theano_backend as K_BACKEND
+# else:
+#     import tensorflow_backend as K_BACKEND
+import tensorflow as tf
 class SubPixelUpscaling(Layer):
     """ Sub-pixel convolutional upscaling layer based on the paper "Real-Time Single Image
     and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network"
@@ -59,7 +59,7 @@ class SubPixelUpscaling(Layer):
         pass
 
     def call(self, x, mask=None):
-        y = K_BACKEND.depth_to_space(x, self.scale_factor, self.data_format)
+        y = tf.depth_to_space(x, self.scale_factor, self.data_format)
         return y
 
     def compute_output_shape(self, input_shape):

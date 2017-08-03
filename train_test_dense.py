@@ -16,7 +16,7 @@ from data_manipulation.generate_features import get_mask_voxels
 from data_manipulation.metrics import dsc_seg
 from keras.layers.core import Dense, Dropout, Activation, Reshape
 from keras.layers.convolutional import Conv3D, UpSampling3D
-from keras_contrib.layers.convolutional Conv3DTranspose
+from keras_contrib.layers.convolutional import  Conv3DTranspose
 from keras.layers.pooling import AveragePooling3D
 from keras.layers.pooling import GlobalAveragePooling3D
 from keras.layers import Input

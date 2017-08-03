@@ -242,10 +242,8 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
     compression = 1.0 - reduction
 
     # Initial convolution
-    x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same',data_format='channels_first', name='initial_conv3D',
+    x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same',data_format='channels_first',
                use_bias=False, kernel_regularizer=l2(weight_decay))(img_input)
-    print '=========='
-    print x.shape
     for block_idx in range(nb_dense_block - 1):
         x, nb_filter = __dense_block(x, nb_layers[block_idx], nb_filter, growth_rate, bottleneck=bottleneck,
                                      dropout_rate=dropout_rate, weight_decay=weight_decay)
@@ -253,21 +251,16 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
         x = __transition_block(x, nb_filter, compression=compression, dropout_rate=dropout_rate,
                                weight_decay=weight_decay)
         nb_filter = int(nb_filter * compression)
-        print x.shape
 
     # The last dense_block does not have a transition_block
     x, nb_filter = __dense_block(x, final_nb_layer, nb_filter, growth_rate, bottleneck=bottleneck,
                                  dropout_rate=dropout_rate, weight_decay=weight_decay)
-    print '$$$$$'
-    print x.shape
-    print '$$$$$'
+ 
     x = BatchNormalization(axis=concat_axis, gamma_regularizer=l2(weight_decay),
                            beta_regularizer=l2(weight_decay))(x)
-    print x.shape
+
     x = Activation('relu')(x)
-    print x.shape
     # x = GlobalAveragePooling3D()(x)
-    print x.shape
 
     # if include_top:
     #     x = Dense(nb_classes, activation=activation, kernel_regularizer=l2(weight_decay), bias_regularizer=l2(weight_decay))(x)
@@ -361,11 +354,7 @@ def main():
               Lambda(lambda l: l[:, 1, :, :, :], output_shape=(1,) + patch_size)(merged_inputs)
             )
             t1 = Lambda(lambda l: l[:, 2:, :, :, :], output_shape=(2,) + patch_size)(merged_inputs)
-            print flair.shape
-            print '+++++++++++'
             flair = create_densenet(2,flair)
-            print flair.shape
-            print '*****'
             t2 = create_densenet(3, t2)
             t1 = create_densenet(5,t1)
                       
@@ -418,7 +407,6 @@ def main():
             #   flair = Dropout(0.5)(flair)
             #   t2 = Dropout(0.5)(t2)
             #   t1 = Dropout(0.5)(t1)
-            print flair.shape
             flair = Flatten()(flair)
             t2 = Flatten()(t2)
             t1 = Flatten()(t1)

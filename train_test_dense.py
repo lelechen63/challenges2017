@@ -199,13 +199,13 @@ def __transition_up_block(ip, nb_filters, type='upsampling', weight_decay=1E-4):
     if type == 'upsampling':
         x = UpSampling3D()(ip)
     elif type == 'subpixel':
-        x = Conv3D(nb_filters, (3, 3,  3), activation='relu', padding='same', W_regularizer=l2(weight_decay),
+        x = Conv3D(nb_filters, (3, 3,  3), activation='relu', padding='same',data_format='channels_first', W_regularizer=l2(weight_decay),
                    use_bias=False, kernel_initializer='he_uniform')(ip)
         x = SubPixelUpscaling(scale_factor=2)(x)
-        x = Conv3D(nb_filters, (3, 3, 3), activation='relu', padding='same', W_regularizer=l2(weight_decay),
+        x = Conv3D(nb_filters, (3, 3, 3), activation='relu', padding='same',data_format='channels_first', W_regularizer=l2(weight_decay),
                    use_bias=False, kernel_initializer='he_uniform')(x)
     else:
-        x = Conv3DTranspose(nb_filters, (3, 3, 3), activation='relu', padding='same', strides=(2, 2, 2),
+        x = Conv3DTranspose(nb_filters, (3, 3, 3), activation='relu', padding='same',data_format='channels_first', strides=(2, 2, 2),
                             kernel_initializer='he_uniform')(ip)
 
     return x
@@ -242,7 +242,7 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
     compression = 1.0 - reduction
 
     # Initial convolution
-    x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same', name='initial_conv3D',
+    x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same',data_format='channels_first' name='initial_conv3D',
                use_bias=False, kernel_regularizer=l2(weight_decay))(img_input)
     print x.shape
     for block_idx in range(nb_dense_block - 1):

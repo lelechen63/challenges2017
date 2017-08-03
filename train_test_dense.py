@@ -103,11 +103,12 @@ def __conv_block(ip, nb_filter, bottleneck=False, dropout_rate=None, weight_deca
     x = BatchNormalization(axis=concat_axis, gamma_regularizer=l2(weight_decay),
                            beta_regularizer=l2(weight_decay))(ip)
     x = Activation('relu')(x)
-
+    print '----'
+    print x.shape
     if bottleneck:
         inter_channel = nb_filter * 4  # Obtained from https://github.com/liuzhuang13/DenseNet/blob/master/densenet.lua
 
-        x = Conv3D(inter_channel, (1, 1, 1), kernel_initializer='he_uniform', padding='same', use_bias=False,
+        x = Conv3D(inter_channel, (1, 1, 1), kernel_initializer='he_uniform', padding='same', data_format='channels_first'.  use_bias=False,
                    kernel_regularizer=l2(weight_decay))(x)
 
         if dropout_rate:
@@ -117,8 +118,10 @@ def __conv_block(ip, nb_filter, bottleneck=False, dropout_rate=None, weight_deca
                                beta_regularizer=l2(weight_decay))(x)
         x = Activation('relu')(x)
 
-    x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same', use_bias=False,
+    x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same', data_format='channels_first', use_bias=False,
                kernel_regularizer=l2(weight_decay))(x)
+    print x.shape
+    print '++++'
     if dropout_rate:
         x = Dropout(dropout_rate)(x)
 
@@ -142,11 +145,11 @@ def __transition_block(ip, nb_filter, compression=1.0, dropout_rate=None, weight
     x = BatchNormalization(axis=concat_axis, gamma_regularizer=l2(weight_decay),
                            beta_regularizer=l2(weight_decay))(ip)
     x = Activation('relu')(x)
-    x = Conv3D(int(nb_filter * compression), (1, 1, 1), kernel_initializer='he_uniform', padding='same', use_bias=False,
+    x = Conv3D(int(nb_filter * compression), (1, 1, 1), kernel_initializer='he_uniform', padding='same',data_format='channels_first', use_bias=False,
                kernel_regularizer=l2(weight_decay))(x)
     if dropout_rate:
         x = Dropout(dropout_rate)(x)
-    x = AveragePooling3D((2, 2, 2), strides=(2, 2, 2))(x)
+    x = AveragePooling3D((2, 2, 2), data_format='channels_first', strides=(2, 2, 2))(x)
 
     return x
 

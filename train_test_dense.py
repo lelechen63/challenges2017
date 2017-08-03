@@ -210,7 +210,7 @@ def __transition_up_block(ip, nb_filters, type='upsampling', weight_decay=1E-4):
 
     return x
 
-def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dense_block=3, growth_rate=8, nb_filter=8,
+def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dense_block=3, growth_rate=4, nb_filter=4,
                        nb_layers_per_block=2, bottleneck=False, reduction=0.0, dropout_rate=None, weight_decay=1E-4,
                        activation='softmax'):
     concat_axis = 1

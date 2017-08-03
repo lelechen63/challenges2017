@@ -102,13 +102,13 @@ def __conv_block(ip, nb_filter, bottleneck=False, dropout_rate=None, weight_deca
 
     x = BatchNormalization(axis=concat_axis, gamma_regularizer=l2(weight_decay),
                            beta_regularizer=l2(weight_decay))(ip)
+    print 'ggg'
     x = Activation('relu')(x)
-    print '----'
     print x.shape
     if bottleneck:
         inter_channel = nb_filter * 4  # Obtained from https://github.com/liuzhuang13/DenseNet/blob/master/densenet.lua
 
-        x = Conv3D(inter_channel, (1, 1, 1), kernel_initializer='he_uniform', padding='same', data_format='channels_first'.  use_bias=False,
+        x = Conv3D(inter_channel, (1, 1, 1), kernel_initializer='he_uniform', padding='same', data_format='channels_first',  use_bias=False,
                    kernel_regularizer=l2(weight_decay))(x)
 
         if dropout_rate:
@@ -121,7 +121,6 @@ def __conv_block(ip, nb_filter, bottleneck=False, dropout_rate=None, weight_deca
     x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same', data_format='channels_first', use_bias=False,
                kernel_regularizer=l2(weight_decay))(x)
     print x.shape
-    print '++++'
     if dropout_rate:
         x = Dropout(dropout_rate)(x)
 

@@ -359,6 +359,8 @@ def main():
             print flair.shape
             print '+++++++++++'
             flair = create_densenet(2,flair)
+            print flair.shape
+            print '*****'
             t2 = create_densenet(3, t2)
             t1 = create_densenet(5,t1)
                       

@@ -175,6 +175,8 @@ def __dense_block(x, nb_layers, nb_filter, growth_rate, bottleneck=False, dropou
         x_list.append(cb)
 
         # x = concatenate(x_list, axis=concat_axis)
+        print x.shape
+        print cb.shape
         x = concatenate([x, cb], axis=concat_axis)
 
         if grow_nb_filters:

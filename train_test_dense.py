@@ -102,9 +102,7 @@ def __conv_block(ip, nb_filter, bottleneck=False, dropout_rate=None, weight_deca
 
     x = BatchNormalization(axis=concat_axis, gamma_regularizer=l2(weight_decay),
                            beta_regularizer=l2(weight_decay))(ip)
-    print 'ggg'
     x = Activation('relu')(x)
-    print x.shape
     if bottleneck:
         inter_channel = nb_filter * 4  # Obtained from https://github.com/liuzhuang13/DenseNet/blob/master/densenet.lua
 
@@ -119,9 +117,7 @@ def __conv_block(ip, nb_filter, bottleneck=False, dropout_rate=None, weight_deca
         x = Activation('relu')(x)
 
     x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same', data_format='channels_first', use_bias=False,
-               kernel_regularizer=l2(weight_decay))(x)
-    print x.shape
-    if dropout_rate:
+               kernel_regularizer=l2(weight_decay))(x)    if dropout_rate:
         x = Dropout(dropout_rate)(x)
 
     return x
@@ -177,8 +173,7 @@ def __dense_block(x, nb_layers, nb_filter, growth_rate, bottleneck=False, dropou
         x_list.append(cb)
 
         # x = concatenate(x_list, axis=concat_axis)
-        print x.shape
-        print cb.shape
+
         x = concatenate([x, cb], axis=concat_axis)
 
         if grow_nb_filters:
@@ -248,7 +243,6 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
     # Initial convolution
     x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same',data_format='channels_first', name='initial_conv3D',
                use_bias=False, kernel_regularizer=l2(weight_decay))(img_input)
-    print x.shape
     for block_idx in range(nb_dense_block - 1):
         x, nb_filter = __dense_block(x, nb_layers[block_idx], nb_filter, growth_rate, bottleneck=bottleneck,
                                      dropout_rate=dropout_rate, weight_decay=weight_decay)
@@ -361,6 +355,7 @@ def main():
             print flair.shape
             print '+++++++++++'
             flair = create_densenet(2,flair)
+            print flair.shape
             t2 = create_densenet(3, t2)
             t1 = create_densenet(5,t1)
                       

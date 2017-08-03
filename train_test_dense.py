@@ -263,8 +263,11 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
     print '$$$$$'
     x = BatchNormalization(axis=concat_axis, gamma_regularizer=l2(weight_decay),
                            beta_regularizer=l2(weight_decay))(x)
+    print x.shape
     x = Activation('relu')(x)
+    print x.shape
     x = GlobalAveragePooling3D()(x)
+    print x.shape
 
     # if include_top:
     #     x = Dense(nb_classes, activation=activation, kernel_regularizer=l2(weight_decay), bias_regularizer=l2(weight_decay))(x)

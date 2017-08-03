@@ -253,7 +253,7 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
         nb_filter = int(nb_filter * compression)
 
     # The last dense_block does not have a transition_block
-    x, nb_filter = __dense_block(x, nb_layers, final_nb_layer, growth_rate, bottleneck=bottleneck,
+    x, nb_filter = __dense_block(x, nb_layers[-1], final_nb_layer, growth_rate, bottleneck=bottleneck,
                                  dropout_rate=dropout_rate, weight_decay=weight_decay)
  
     x = BatchNormalization(axis=concat_axis, gamma_regularizer=l2(weight_decay),

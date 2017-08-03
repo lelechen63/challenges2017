@@ -244,7 +244,7 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
     # Initial convolution
     x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same', name='initial_conv3D',
                use_bias=False, kernel_regularizer=l2(weight_decay))(img_input)
-
+    print x.shape
     for block_idx in range(nb_dense_block - 1):
         x, nb_filter = __dense_block(x, nb_layers[block_idx], nb_filter, growth_rate, bottleneck=bottleneck,
                                      dropout_rate=dropout_rate, weight_decay=weight_decay)

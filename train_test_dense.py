@@ -15,7 +15,7 @@ from data_creation import load_patch_batch_generator_test
 from data_manipulation.generate_features import get_mask_voxels
 from data_manipulation.metrics import dsc_seg
 from keras.layers.core import Dense, Dropout, Activation, Reshape
-from keras.layers.convolutional import Conv3D, UpSampling3D, Conv3DTranspose
+from keras.layers.convolutional import Conv3D, Conv3DTranspose, UpSampling3D
 from keras.layers.pooling import AveragePooling3D
 from keras.layers.pooling import GlobalAveragePooling3D
 from keras.layers import Input
@@ -354,7 +354,8 @@ def main():
               Lambda(lambda l: l[:, 1, :, :, :], output_shape=(1,) + patch_size)(merged_inputs)
             )
             t1 = Lambda(lambda l: l[:, 2:, :, :, :], output_shape=(2,) + patch_size)(merged_inputs)
-
+            print flair.shape
+            print '+++++++++++'
             flair = create_densenet(2,flair)
             t2 = create_densenet(3, t2)
             t1 = create_densenet(5,t1)

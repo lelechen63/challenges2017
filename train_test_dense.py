@@ -117,7 +117,8 @@ def __conv_block(ip, nb_filter, bottleneck=False, dropout_rate=None, weight_deca
         x = Activation('relu')(x)
 
     x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same', data_format='channels_first', use_bias=False,
-               kernel_regularizer=l2(weight_decay))(x)    if dropout_rate:
+               kernel_regularizer=l2(weight_decay))(x)
+    if dropout_rate:
         x = Dropout(dropout_rate)(x)
 
     return x
@@ -355,7 +356,6 @@ def main():
             print flair.shape
             print '+++++++++++'
             flair = create_densenet(2,flair)
-            print flair.shape
             t2 = create_densenet(3, t2)
             t1 = create_densenet(5,t1)
                       

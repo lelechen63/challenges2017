@@ -17,7 +17,7 @@ from data_manipulation.metrics import dsc_seg
 from keras.layers.core import Dense, Dropout, Activation, Reshape
 from keras.layers.convolutional import Conv3D, Conv3DTranspose, UpSampling3D
 from keras.layers.pooling import AveragePooling3D
-from keras.layers.pooling import GlobalAveragePooling3D
+# from keras.layers.pooling import GlobalAveragePooling3D
 from keras.layers import Input
 from keras.layers.merge import concatenate
 from keras.layers.normalization import BatchNormalization
@@ -266,7 +266,7 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
     print x.shape
     x = Activation('relu')(x)
     print x.shape
-    x = GlobalAveragePooling3D()(x)
+    # x = GlobalAveragePooling3D()(x)
     print x.shape
 
     # if include_top:

@@ -218,12 +218,12 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
     if reduction != 0.0:
         assert reduction <= 1.0 and reduction > 0.0, 'reduction value must lie between 0.0 and 1.0'
         if type(nb_layers_per_block) is list or type(nb_layers_per_block) is tuple:
-        nb_layers = list(nb_layers_per_block)  # Convert tuple to list
+            nb_layers = list(nb_layers_per_block)  # Convert tuple to list
 
-        assert len(nb_layers) == (nb_dense_block + 1), 'If list, nb_layer is used as provided. ' \
+            assert len(nb_layers) == (nb_dense_block + 1), 'If list, nb_layer is used as provided. ' \
                                                        'Note that list size must be (nb_dense_block + 1)'
-        final_nb_layer = nb_layers[-1]
-        nb_layers = nb_layers[:-1]
+            final_nb_layer = nb_layers[-1]
+            nb_layers = nb_layers[:-1]
     else:
         if nb_layers_per_block == -1:
             count = int((depth - 4) / 3)

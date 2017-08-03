@@ -408,7 +408,7 @@ def main():
             #   flair = Dropout(0.5)(flair)
             #   t2 = Dropout(0.5)(t2)
             #   t1 = Dropout(0.5)(t1)
-
+            print flair.shape
             flair = Flatten()(flair)
             t2 = Flatten()(t2)
             t1 = Flatten()(t1)

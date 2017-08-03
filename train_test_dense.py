@@ -244,6 +244,8 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
     # Initial convolution
     x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same',data_format='channels_first', name='initial_conv3D',
                use_bias=False, kernel_regularizer=l2(weight_decay))(img_input)
+    print '=========='
+    print x.shape
     for block_idx in range(nb_dense_block - 1):
         x, nb_filter = __dense_block(x, nb_layers[block_idx], nb_filter, growth_rate, bottleneck=bottleneck,
                                      dropout_rate=dropout_rate, weight_decay=weight_decay)
@@ -251,11 +253,12 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
         x = __transition_block(x, nb_filter, compression=compression, dropout_rate=dropout_rate,
                                weight_decay=weight_decay)
         nb_filter = int(nb_filter * compression)
+        print x.shape
 
     # The last dense_block does not have a transition_block
     x, nb_filter = __dense_block(x, final_nb_layer, nb_filter, growth_rate, bottleneck=bottleneck,
                                  dropout_rate=dropout_rate, weight_decay=weight_decay)
-
+    print x.shape
     x = BatchNormalization(axis=concat_axis, gamma_regularizer=l2(weight_decay),
                            beta_regularizer=l2(weight_decay))(x)
     x = Activation('relu')(x)

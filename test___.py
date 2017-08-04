@@ -215,7 +215,8 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
 
     return x
 def test():
-	a = np.zeros((1,13,13,13,1))
+	a = np.zeros((None,13,13,13,1))
+	print a.shape
 	net = create_densenet(2,a)
 	print net.summary()
 test()

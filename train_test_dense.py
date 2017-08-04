@@ -210,7 +210,7 @@ def __transition_up_block(ip, nb_filters, type='upsampling', weight_decay=1E-4):
 
     return x
 
-def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dense_block=3, growth_rate=0, nb_filter=4,
+def create_densenet(nb_classes, img_input, include_top= False, depth=28, nb_dense_block=3, growth_rate=4, nb_filter=8,
                        nb_layers_per_block=2, bottleneck=False, reduction=0.0, dropout_rate=None, weight_decay=1E-4,
                        activation='softmax'):
     concat_axis = 1
@@ -242,10 +242,10 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
     compression = 1.0 - reduction
 
     # Initial convolution
-    x = Conv3D(8, (3, 3, 3), kernel_initializer='he_uniform', padding='same',data_format='channels_first',
+    x = Conv3D(nb_filter, (3, 3, 3), kernel_initializer='he_uniform', padding='same',data_format='channels_first',
                use_bias=False, kernel_regularizer=l2(weight_decay))(img_input)
     for block_idx in range(nb_dense_block - 1):
-        x, nb_filter = __dense_block(x, nb_layers[block_idx], 16*(block_idx + 1), growth_rate, bottleneck=bottleneck,
+        x, nb_filter = __dense_block(x, nb_layers[block_idx], nb_filter, growth_rate, bottleneck=bottleneck,
                                      dropout_rate=dropout_rate, weight_decay=weight_decay)
         # add transition_block
         x = __transition_block(x, nb_filter, compression=compression, dropout_rate=dropout_rate,
@@ -253,7 +253,7 @@ def create_densenet(nb_classes, img_input, include_top= False, depth=40, nb_dens
         nb_filter = int(nb_filter * compression)
 
     # The last dense_block does not have a transition_block
-    x, nb_filter = __dense_block(x, 2, 64, growth_rate, bottleneck=bottleneck,
+    x, nb_filter = __dense_block(x, nb_layers[-1], final_nb_layer, growth_rate, bottleneck=bottleneck,
                                  dropout_rate=dropout_rate, weight_decay=weight_decay)
  
     x = BatchNormalization(axis=concat_axis, gamma_regularizer=l2(weight_decay),
@@ -355,8 +355,8 @@ def main():
             )
             t1 = Lambda(lambda l: l[:, 2:, :, :, :], output_shape=(2,) + patch_size)(merged_inputs)
             flair = create_densenet(2,flair)
-            # t2 = create_densenet(3, t2)
-            # t1 = create_densenet(5,t1)
+            t2 = create_densenet(3, t2)
+            t1 = create_densenet(5,t1)
                       
             # flair = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
             # # flair = Dropout(0.5)(flair)
@@ -408,22 +408,22 @@ def main():
             #   t2 = Dropout(0.5)(t2)
             #   t1 = Dropout(0.5)(t1)
             flair = Flatten()(flair)
-            # t2 = Flatten()(t2)
-            # t1 = Flatten()(t1)
+            t2 = Flatten()(t2)
+            t1 = Flatten()(t1)
             flair = Dense(dense_size, activation='relu')(flair)
             flair = Dropout(0.5)(flair)
-            # t2 = concatenate([flair, t2])
-            # t2 = Dense(dense_size, activation='relu')(t2)
-            # t2 = Dropout(0.5)(t2)
-            # t1 = concatenate([t2, t1])
-            # t1 = Dense(dense_size, activation='relu')(t1)
-            # t1 = Dropout(0.5)(t1)
+            t2 = concatenate([flair, t2])
+            t2 = Dense(dense_size, activation='relu')(t2)
+            t2 = Dropout(0.5)(t2)
+            t1 = concatenate([t2, t1])
+            t1 = Dense(dense_size, activation='relu')(t1)
+            t1 = Dropout(0.5)(t1)
 
             tumor = Dense(2, activation='softmax', name='tumor')(flair)
-            # core = Dense(3, activation='softmax', name='core')(t2)
-            # enhancing = Dense(num_classes, activation='softmax', name='enhancing')(t1)
-            # net = Model(inputs=merged_inputs, outputs=[tumor, core, enhancing])
-            net = Model(inputs=merged_inputs, outputs=[tumor])
+            core = Dense(3, activation='softmax', name='core')(t2)
+            enhancing = Dense(num_classes, activation='softmax', name='enhancing')(t1)
+            net = Model(inputs=merged_inputs, outputs=[tumor, core, enhancing])
+            # net = Model(inputs=merged_inputs, outputs=[tumor])
             
 
 

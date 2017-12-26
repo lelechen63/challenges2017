@@ -150,7 +150,8 @@ def main():
             # The idea is to let the network work on the three parts to improve the multiclass segmentation.
             merged_inputs = Input(shape=(4,) + patch_size, name='merged_inputs')
             # flair = merged_inputs
-            flair = Reshape((1,) + patch_size)(
+
+            flair = Reshape((4,) + patch_size)(
               Lambda(
                   lambda l: l[:, :, :, :, :],
                   output_shape=(4,) + patch_size)(merged_inputs),

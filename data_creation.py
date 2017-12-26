@@ -110,20 +110,24 @@ def get_xy(
                 y_cat *= 3
             y = y_labels + y_cat
         else:
-            y = [
-                keras.utils.to_categorical(
-                    np.copy(y).astype(dtype=np.bool),
-                    num_classes=2
-                ),
-                keras.utils.to_categorical(
-                    np.array(y > 0).astype(dtype=np.int8) + np.array(y > 1).astype(dtype=np.int8),
-                    num_classes=3
-                ),
+            # y = [
+            #     keras.utils.to_categorical(
+            #         np.copy(y).astype(dtype=np.bool),
+            #         num_classes=2
+            #     ),
+            #     keras.utils.to_categorical(
+            #         np.array(y > 0).astype(dtype=np.int8) + np.array(y > 1).astype(dtype=np.int8),
+            #         num_classes=3
+            #     ),
+            #     keras.utils.to_categorical(
+            #         y,
+            #         num_classes=nlabels
+            #     )
+            # ]
                 keras.utils.to_categorical(
                     y,
                     num_classes=nlabels
                 )
-            ]
     else:
         y = keras.utils.to_categorical(np.copy(y).astype(dtype=np.bool), num_classes=2)
     return x, y

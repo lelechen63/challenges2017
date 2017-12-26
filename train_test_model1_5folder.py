@@ -148,12 +148,13 @@ def main():
             # - Core segmentation (including whole tumor)
             # - Whole segmentation (tumor, core and enhancing parts)
             # The idea is to let the network work on the three parts to improve the multiclass segmentation.
-            # merged_inputs = Input(shape=(4,) + patch_size, name='merged_inputs')
-            flair = Reshape((1,) + patch_size)(
-              Lambda(
-                  lambda l: l[:, :, :, :, :],
-                  output_shape=(4,) + patch_size)(merged_inputs),
-            )
+            merged_inputs = Input(shape=(4,) + patch_size, name='merged_inputs')
+            flair = merged_inputs
+            # flair = Reshape((1,) + patch_size)(
+            #   Lambda(
+            #       lambda l: l[:, :, :, :, :],
+            #       output_shape=(4,) + patch_size)(merged_inputs),
+            # )
             
             flair = Conv3D(64,(3,3,3),1,1,activation= 'relu',data_format = 'channels_first')(flair)
             # flair = Dropout(0.5)(flair)

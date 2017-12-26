@@ -134,7 +134,9 @@ def get_xy(
 
     print (x.shape)
     print (y.shape)
+    print (y)
     print ('++++')
+
     return x, y
 
 

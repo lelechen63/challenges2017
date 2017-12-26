@@ -148,100 +148,34 @@ def main():
             # - Core segmentation (including whole tumor)
             # - Whole segmentation (tumor, core and enhancing parts)
             # The idea is to let the network work on the three parts to improve the multiclass segmentation.
-            merged_inputs = Input(shape=(4,) + patch_size, name='merged_inputs')
+            # merged_inputs = Input(shape=(4,) + patch_size, name='merged_inputs')
             # flair = merged_inputs
 
-            flair = Reshape((4,) + patch_size)(
-              Lambda(
-                  lambda l: l[:, :, :, :, :],
-                  output_shape=(4,) + patch_size)(merged_inputs),
-            )
-            
-            flair = Conv3D(64,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first')(flair)
-            # flair = Dropout(0.5)(flair)
-            flair = Conv3D(64,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first')(flair)
-            # flair = Dropout(0.5)(flair)
-            # flair = Conv3D(64,(3,3,3),1,1,activation= 'relu',data_format = 'channels_first')(flair)
+            model = Sequential()
+            model.add(Conv3D(64,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first', input_shape=(3, 150, 150)))
+            model.add(Conv3D(64,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first'))
+            model.add(MaxPooling3D(pool_size=(3, 3, 3), strides=2, data_format='channels_first'))
 
-            flair = MaxPooling3D(pool_size=(3, 3, 3), strides=2, data_format='channels_first')(flair)
-            flair = Conv3D(128,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first')(flair)
-            # flair = Dropout(0.5)(flair)
-            flair = Conv3D(128,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first')(flair)
-            flair = MaxPooling3D(pool_size=(3, 3, 3), strides=2, data_format='channels_first')(flair)
-            flair = Flatten()(flair)
-            print flair.shape
-            flair = Dense(256, activation='relu')(flair)
-            flair = Dropout(0.5)(flair)
-            enhancing = Dense(num_classes, activation='softmax', name='enhancing')(flair)
+            model.add(Conv3D(128,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first'))
+            model.add(Conv3D(128,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first'))
+            model.add(MaxPooling3D(pool_size=(3, 3, 3), strides=2, data_format='channels_first'))
+
+            model.add(Flatten())
+
+            model.add(Dense(256, activation='relu'))
+
+            model.add(Dropout(0.5))
+
+            model.add(Dense(num_classes,activation='softmax'))
 
 
-            # # flair = Dropout(0.5)(flair)
-            # flair = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
-            # # flair = Dropout(0.5)(flair)
-            # flair = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(flair)
-            # # flair = Dropout(0.5)(flair)
-            # t2 = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
-            # # t2 = Dropout(0.5)(t2)
-            # t2 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
-            # # t2 = Dropout(0.5)(t2)
-            # t2 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
-            # # t2 = Dropout(0.5)(t2)
-            # t2 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
-            # # t2 = Dropout(0.5)(t2)
-            # t2 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t2)
-            # # t2 = Dropout(0.5)(t2)
-            # t1 = Conv3D(8,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
-            # # t1 = Dropout(0.5)(t1)
-            # t1 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
-            # # t1 = Dropout(0.5)(t1)
-            # t1 = Conv3D(16,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
-            # # t1 = Dropout(0.5)(t1)
-            # t1 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1) 
-            # # t1 = Dropout(0.5)(t1)
-            # t1 = Conv3D(32,(3,3,3),activation= 'relu',data_format = 'channels_first')(t1)
-            # t1 = Dropout(0.5)(t1)
-            # for filters, kernel_size in zip(filters_list, kernel_size_list):
-            #   flair = Conv3D(filters,
-            #                  kernel_size=kernel_size,
-            #                  activation='relu',
-            #                  data_format='channels_first'
-            #                  )(flair)
-            #   t2 = Conv3D(filters,
-            #               kernel_size=kernel_size,
-            #               activation='relu',
-            #               data_format='channels_first'
-            #               )(t2)
-            #   t1 = Conv3D(filters,
-            #               kernel_size=kernel_size,
-            #               activation='relu',
-            #               data_format='channels_first'
-            #               )(t1)
-            #   flair = Dropout(0.5)(flair)
-            #   t2 = Dropout(0.5)(t2)
-            #   t1 = Dropout(0.5)(t1)
 
-            # flair = Flatten()(flair)
-            # t2 = Flatten()(t2)
-            # t1 = Flatten()(t1)
-            # flair = Dense(dense_size, activation='relu')(flair)
-            # flair = Dropout(0.5)(flair)
-            # t2 = concatenate([flair, t2])
-            # t2 = Dense(dense_size, activation='relu')(t2)
-            # t2 = Dropout(0.5)(t2)
-            # t1 = concatenate([t2, t1])
-            # t1 = Dense(dense_size, activation='relu')(t1)
-            # t1 = Dropout(0.5)(t1)
-
-            # tumor = Dense(2, activation='softmax', name='tumor')(flair)
-            # core = Dense(3, activation='softmax', name='core')(t2)
-            # enhancing = Dense(num_classes, activation='softmax', name='enhancing')(t1)
-
-            net = Model(inputs=flair, outputs=enhancing)
+            net = model
 
 
             # net_name_before =  os.path.join(path,'baseline-brats2017.fold0.D500.f.p13.c3c3c3c3c3.n32n32n32n32n32.d256.e1.pad_valid.mdl')
             # net = keras.models.load_model(net_name_before)
-            net.compile(optimizer='adadelta', loss='categorical_crossentropy', metrics=['accuracy'])
+            net.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
 
             print(c['c'] + '[' + strftime("%H:%M:%S") + ']    ' +
                   c['g'] + 'Training the model with a generator for ' +

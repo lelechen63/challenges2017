@@ -10,6 +10,7 @@ from numpy import logical_and as log_and
 from numpy import logical_or as log_or
 from numpy import logical_not as log_not
 import keras
+import threading
 
 
 def clip_to_roi(images, roi):

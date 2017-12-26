@@ -209,7 +209,7 @@ def main():
                     split=not sequential,
                     datatype=np.float32
                 ),
-                workers=queue,
+                # workers=queue,
                 steps_per_epoch=train_steps_per_epoch,
                 validation_steps=val_steps_per_epoch,
                 max_q_size=queue,

@@ -156,16 +156,16 @@ def main():
             #       output_shape=(4,) + patch_size)(merged_inputs),
             # )
             
-            flair = Conv3D(64,(3,3,3),1,1,activation= 'relu',data_format = 'channels_first')(flair)
+            flair = Conv3D(64,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first')(flair)
             # flair = Dropout(0.5)(flair)
-            flair = Conv3D(64,(3,3,3),1,1,activation= 'relu',data_format = 'channels_first')(flair)
+            flair = Conv3D(64,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first')(flair)
             # flair = Dropout(0.5)(flair)
             # flair = Conv3D(64,(3,3,3),1,1,activation= 'relu',data_format = 'channels_first')(flair)
 
             flair = MaxPooling3D(pool_size=(3, 3, 3), strides=2, data_format='channels_first')(flair)
-            flair = Conv3D(128,(3,3,3),1,1,activation= 'relu',data_format = 'channels_first')(flair)
+            flair = Conv3D(128,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first')(flair)
             # flair = Dropout(0.5)(flair)
-            flair = Conv3D(128,(3,3,3),1,1,activation= 'relu',data_format = 'channels_first')(flair)
+            flair = Conv3D(128,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first')(flair)
             flair = MaxPooling3D(pool_size=(3, 3, 3), strides=2, data_format='channels_first')(flair)
             flair = Flatten()(flair)
             flair = Dense(256, activation='relu')(flair)

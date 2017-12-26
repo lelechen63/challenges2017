@@ -152,7 +152,7 @@ def main():
             # flair = merged_inputs
 
             model = Sequential()
-            model.add(Conv3D(64,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first', input_shape=(batch_size,4, 33, 33,33)))
+            model.add(Conv3D(64,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first', input_shape=(4, 33, 33,33)))
             model.add(Conv3D(64,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first'))
             model.add(MaxPooling3D(pool_size=(3, 3, 3), strides=2, data_format='channels_first'))
 

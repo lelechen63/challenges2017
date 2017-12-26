@@ -22,7 +22,7 @@ def parse_inputs():
     parser = argparse.ArgumentParser(description='Test different nets with 3D data.')
     parser.add_argument('-f', '--folder', dest='dir_name', default='/home/mariano/DATA/Brats17CBICA/')
     parser.add_argument('-F', '--n-fold', dest='folds', type=int, default=5)
-    parser.add_argument('-i', '--patch-width', dest='patch_width', type=int, default=33)
+    parser.add_argument('-i', '--patch-width', dest='patch_width', type=int, default=13)
     parser.add_argument('-k', '--kernel-size', dest='conv_width', nargs='+', type=int, default=3)
     parser.add_argument('-c', '--conv-blocks', dest='conv_blocks', type=int, default=5)
     parser.add_argument('-b', '--batch-size', dest='batch_size', type=int, default=2048)

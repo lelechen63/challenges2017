@@ -1,4 +1,4 @@
-# from __future__ import print_function
+from __future__ import print_function
 import sys
 from operator import itemgetter
 import numpy as np
@@ -132,9 +132,9 @@ def get_xy(
     else:
         y = keras.utils.to_categorical(np.copy(y).astype(dtype=np.bool), num_classes=2)
 
-    print x.shape
-    print y.shape
-    print '++++'
+    print (x.shape)
+    print (y.shape)
+    print ('++++')
     return x, y
 
 

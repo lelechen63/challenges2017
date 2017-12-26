@@ -168,6 +168,7 @@ def main():
             flair = Conv3D(128,(3,3,3),strides=1, padding='same',activation= 'relu',data_format = 'channels_first')(flair)
             flair = MaxPooling3D(pool_size=(3, 3, 3), strides=2, data_format='channels_first')(flair)
             flair = Flatten()(flair)
+            print flair.shape
             flair = Dense(256, activation='relu')(flair)
             flair = Dropout(0.5)(flair)
             enhancing = Dense(num_classes, activation='softmax', name='enhancing')(flair)

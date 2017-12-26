@@ -131,7 +131,12 @@ def get_xy(
                 )
     else:
         y = keras.utils.to_categorical(np.copy(y).astype(dtype=np.bool), num_classes=2)
+
+    print x.shape
+    print y.shape
+    print '++++'
     return x, y
+
 
 class threadsafe_iter:
     """Takes an iterator/generator and makes it thread-safe by

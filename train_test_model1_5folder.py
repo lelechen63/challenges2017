@@ -169,7 +169,7 @@ def main():
             flair = Flatten()(flair)
             flair = Dense(256, activation='relu')(flair)
             flair = Dropout(0.5)(flair)
-            enhancing = Dense(num_classes, activation='softmax', name='enhancing')(tflair1)
+            enhancing = Dense(num_classes, activation='softmax', name='enhancing')(flair)
 
 
             # # flair = Dropout(0.5)(flair)
